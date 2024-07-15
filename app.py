@@ -17,9 +17,9 @@ app.secret_key = os.getenv("FLASK_KEY")
 thread = criar_thread()
 
 entrevistador = "asst_B7cRi6e9O0VV6bACSS6Bn0wA"  # Asistente Entrevistador 2 (OpenaAI Bicalho)
-analista = "asst_oQdv1pPrfExSMzvodE4b00EV"  # Analista IART
-redator = "asst_MQj0jeIAzuRnYI8bMdCx8hv1"  # Redator IART3
-revisor = "asst_7dojcQenLDVP2aj9hNOLx6Qb"  # Revisor Interno IART
+#analista = "asst_oQdv1pPrfExSMzvodE4b00EV"  # Analista IART
+redator = "asst_MQj0jeIAzuRnYI8bMdCx8hv1"  # Redator IART5
+#revisor = "asst_7dojcQenLDVP2aj9hNOLx6Qb"  # Revisor Interno IART
 
 assistente = entrevistador
 
