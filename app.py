@@ -95,7 +95,7 @@ def chat():
     texto_resposta = resposta.content[0].text.value
     if 'FIM DA ENTREVISTA' in texto_resposta:
         global assistente
-        assistente = analista
+        assistente = redator
     return texto_resposta
 
 @app.route("/")
