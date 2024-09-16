@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
@@ -14,41 +14,26 @@ modelo = os.getenv("MODELO_GERAL")
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_KEY")
 
-# Removed the global thread variable
-# thread = criar_thread()
+thread = criar_thread()
 
 entrevistador = "asst_B7cRi6e9O0VV6bACSS6Bn0wA"  # Asistente Entrevistador 2 (OpenaAI Bicalho)
+#analista = "asst_oQdv1pPrfExSMzvodE4b00EV"  # Analista IART
 redator = "asst_MQj0jeIAzuRnYI8bMdCx8hv1"  # Redator IART5
+#revisor = "asst_7dojcQenLDVP2aj9hNOLx6Qb"  # Revisor Interno IART
 
-# Removed the global assistente variable
-# assistente = entrevistador
+assistente = entrevistador
 
 def bot(prompt):
-    # Retrieve or create thread per user session
-    if 'thread_id' not in session:
-        # Create a new thread
-        thread = cliente.beta.threads.create()
-        session['thread_id'] = thread.id
-    else:
-        thread_id = session['thread_id']
-        thread = cliente.beta.threads.retrieve(thread_id=thread_id)
-
-    # Retrieve or set assistant per user session
-    if 'assistente' not in session:
-        session['assistente'] = entrevistador  # Initial assistant
-    assistente = session['assistente']
-
-    # Get the conversation history
+    global assistente
     historico = list(cliente.beta.threads.messages.list(thread_id=thread.id).data)
 
     if len(historico) > 0:
         ultima_interacao = historico[0].content[0].text.value
-
+        
         if "FIM DA ENTREVISTA" in ultima_interacao:
-            session['assistente'] = redator
             assistente = redator
 
-            # Create a message from the redator
+            # Criar uma mensagem do redator
             cliente.beta.threads.messages.create(
                 thread_id=thread.id,
                 role="assistant",
@@ -108,6 +93,9 @@ def chat():
     resposta = bot(prompt)
     print(resposta)
     texto_resposta = resposta.content[0].text.value
+    if 'FIM DA ENTREVISTA' in texto_resposta:
+        global assistente
+        assistente = redator
     return texto_resposta
 
 @app.route("/")
